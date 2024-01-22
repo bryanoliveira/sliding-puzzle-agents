@@ -5,8 +5,7 @@ import yaml
 import gymnasium as gym
 from stable_baselines3 import PPO
 
-from env import SlidingEnv
-import wrappers
+import sliding_puzzles
 
 
 if __name__ == "__main__":
@@ -17,14 +16,14 @@ if __name__ == "__main__":
     with open(f"runs/{args.model}/configs.yaml", "r") as f:
         configs = yaml.load(f, Loader=yaml.FullLoader)
 
-    gym.envs.register(
-        id="SlidingEnv-v0",
-        entry_point=SlidingEnv,
-        max_episode_steps=configs["max_episode_steps"],
+    env = sliding_puzzles.make(
+        render_mode="human",
+        w=configs["env_w"],
+        h=configs["env_h"],
+        variation=configs["env_variation"],
+        image_folder=configs["env_image_folder"],
+        shuffle_steps=configs["env_shuffle_steps"],
     )
-
-    env = gym.make("SlidingEnv-v0", render_mode="human", **configs["env_kwargs"])
-    env = configs["wrapper_class"](env)
 
     obs, info = env.reset()
     terminated = False
@@ -32,12 +31,16 @@ if __name__ == "__main__":
 
     model = PPO.load(f"runs/{args.model}/model", env=env)
 
-    while not (terminated or truncated):
-        action, _states = model.predict(obs)
-        obs, reward, terminated, truncated, info = env.step(action.item())
-        print(terminated, truncated, reward)
-        env.render()
-        time.sleep(0.5)
+    while True:
+        while not (terminated or truncated):
+            action, _states = model.predict(obs, deterministic=True)
+            obs, reward, terminated, truncated, info = env.step(action.item())
+            print(obs)
+            print(terminated, truncated, reward)
+            env.render()
+            time.sleep(0.5)
 
-    time.sleep(60)
-    env.close()
+        input("Press Enter to continue...")
+        obs, info = env.reset()
+        terminated = False
+        truncated = False
