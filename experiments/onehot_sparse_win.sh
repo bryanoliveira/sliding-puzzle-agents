@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# ---- ONEHOT
-
 # 2x2
 python train.py --seed 304 --env-w 2 --env-h 2 --env-shuffle-steps 8 --env-variation onehot --env-sparse-rewards --env-sparse-mode win
 python train.py --seed 420 --env-w 2 --env-h 2 --env-shuffle-steps 8 --env-variation onehot --env-sparse-rewards --env-sparse-mode win
