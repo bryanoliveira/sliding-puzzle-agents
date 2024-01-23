@@ -26,6 +26,8 @@ if __name__ == "__main__":
     parser.add_argument("--env-h", type=int, default=2)
     parser.add_argument("--env-shuffle-steps", type=int, default=5)
     parser.add_argument("--env-sparse-rewards", action="store_true")
+    parser.add_argument("--env-sparse-mode", type=str, default="invalid_and_win")
+    parser.add_argument("--env-win-reward", type=int, default=10)
     parser.add_argument("--env-variation", type=str, default="normalized")
     parser.add_argument("--env-image-folder", type=str, default="imgs/single")
     parser.add_argument("--n-envs", type=int, default=32)

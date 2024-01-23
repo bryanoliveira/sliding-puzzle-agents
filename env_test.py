@@ -1,6 +1,13 @@
 import sliding_puzzles
 
-env = sliding_puzzles.make(w=2, h=2, render_mode="human")
+env = sliding_puzzles.make(
+    render_mode="human",
+    w=3,
+    h=3,
+    sparse_rewards=True,
+    shuffle_steps=18,
+    variation="normalized",
+)
 obs = env.reset()
 
 while True:
