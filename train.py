@@ -28,7 +28,7 @@ if __name__ == "__main__":
     parser.add_argument("--env-sparse-rewards", action="store_true")
     parser.add_argument("--env-sparse-mode", type=str, default="invalid_and_win")
     parser.add_argument("--env-win-reward", type=int, default=10)
-    parser.add_argument("--env-variation", type=str, default="normalized")
+    parser.add_argument("--env-variation", type=str, default="raw")
     parser.add_argument("--env-image-folder", type=str, default="imgs/single")
     parser.add_argument("--n-envs", type=int, default=32)
     parser.add_argument("--n-steps", type=int, default=1000)
@@ -52,8 +52,11 @@ if __name__ == "__main__":
             "h": configs["env_h"],
             "shuffle_steps": configs["env_shuffle_steps"],
             "sparse_rewards": configs["env_sparse_rewards"],
+            "sparse_mode": configs["env_sparse_mode"],
+            "win_reward": configs["env_win_reward"],
             "variation": configs["env_variation"],
             "image_folder": configs["env_image_folder"],
+            "render_mode": "state",
         },
         monitor_dir=f"runs/{configs['run_id']}/logs",
         monitor_kwargs={"info_keywords": ("is_success",)},
