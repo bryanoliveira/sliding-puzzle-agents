@@ -52,6 +52,8 @@ if __name__ == "__main__":
             "h": configs["env_h"],
             "shuffle_steps": configs["env_shuffle_steps"],
             "sparse_rewards": configs["env_sparse_rewards"],
+            "sparse_mode": configs["env_sparse_mode"],
+            "win_reward": configs["env_win_reward"],
             "variation": configs["env_variation"],
             "image_folder": configs["env_image_folder"],
         },
