@@ -1,22 +1,24 @@
 import argparse
 import datetime
+import json
 import os
+import sys
 import yaml
 
 import gymnasium as gym
 import numpy as np
 from stable_baselines3 import PPO
+from stable_baselines3.common import callbacks
 from stable_baselines3.common.env_util import make_vec_env
 
 import sliding_puzzles
-from callbacks import SuccessRateCallback
 
 
 if __name__ == "__main__":
     # Create the parser
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--run_id", type=str, default=datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+        "--run_id", type=str, default=datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     )
     parser.add_argument(
         "--policy", type=str, default="MlpPolicy", choices=["MlpPolicy", "CnnPolicy"]
@@ -30,10 +32,20 @@ if __name__ == "__main__":
     parser.add_argument("--env-win-reward", type=int, default=10)
     parser.add_argument("--env-variation", type=str, default="raw")
     parser.add_argument("--env-image-folder", type=str, default="imgs/single")
+    parser.add_argument("--env-image-background", type=eval, default="(0, 0, 0)")
     parser.add_argument("--n-envs", type=int, default=32)
     parser.add_argument("--n-steps", type=int, default=1000)
     parser.add_argument("--seed", type=int, default=42)
     args = parser.parse_args()
+
+    experiment_name = f"{args.env_variation}"
+    if args.env_variation == "image":
+        experiment_name += f"_{args.env_image_folder.split('/')[-1]}"
+    experiment_name += f"_{args.env_w}x{args.env_h}"
+    if args.env_sparse_rewards:
+        experiment_name += f"_sparse_{args.env_sparse_mode}"
+    experiment_name += f"_{args.seed}"
+    args.run_id = f"{args.run_id}-{experiment_name}"
 
     os.makedirs(f"runs/{args.run_id}", exist_ok=True)
     with open(f"runs/{args.run_id}/configs.yaml", "w") as f:
@@ -56,6 +68,7 @@ if __name__ == "__main__":
             "win_reward": configs["env_win_reward"],
             "variation": configs["env_variation"],
             "image_folder": configs["env_image_folder"],
+            "background_color_rgb": configs["env_image_background"],
             "render_mode": "state",
         },
         monitor_dir=f"runs/{configs['run_id']}/logs",
@@ -74,7 +87,16 @@ if __name__ == "__main__":
     model.learn(
         total_timesteps=configs["total_timesteps"],
         progress_bar=True,
-        callback=SuccessRateCallback(),
+        callback=callbacks.EvalCallback(
+            env,
+            eval_freq=1500,
+            n_eval_episodes=5,
+            deterministic=True,
+            render=False,
+            log_path=f"runs/{configs['run_id']}/eval_logs",
+            best_model_save_path=f"runs/{configs['run_id']}/best_model",
+            verbose=1,
+        ),
     )
 
     model.save(f"runs/{configs['run_id']}/model")
