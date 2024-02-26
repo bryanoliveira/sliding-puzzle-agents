@@ -7,7 +7,7 @@ base_folder="./runs"
 for folder in "$base_folder"/*/; do
     # Check if model.zip exists in the folder
     if [ ! -f "${folder}configs.yaml" ]; then
-        echo "Deleting ${folder} as it does not contain model.zip"
+        echo "Deleting ${folder} as it does not contain configs.yaml"
         rm -rf "${folder}"
     fi
 done

@@ -1,0 +1,11 @@
+parent_config: base
+ray:
+  algorithm: DreamerV3
+  analysis_metric: episode_reward_mean
+  config:
+    use_float16: False
+    symlog_obs: True
+
+    num_learner_workers: 2
+    num_cpus_per_learner_worker: 1
+    num_gpus_per_learner_worker: 0

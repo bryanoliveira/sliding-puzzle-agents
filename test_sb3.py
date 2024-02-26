@@ -16,24 +16,22 @@ if __name__ == "__main__":
     with open(f"runs/{args.model}/configs.yaml", "r") as f:
         configs = yaml.load(f, Loader=yaml.FullLoader)
 
-    env = sliding_puzzles.make(
-        render_mode="human",
-        w=configs["env_w"],
-        h=configs["env_h"],
-        variation=configs["env_variation"],
-        image_folder=configs["env_image_folder"],
-        shuffle_steps=configs["env_shuffle_steps"],
-    )
+    env = sliding_puzzles.make(**{
+        **configs["env"],
+        **{
+            "render_mode": "human"
+        }
+    })
 
     obs, info = env.reset()
     terminated = False
     truncated = False
 
-    model = PPO.load(f"runs/{args.model}/model", env=env)
+    model = PPO.load(f"runs/{args.model}/best_model/best_model", env=env)
 
     while True:
         while not (terminated or truncated):
-            action, _states = model.predict(obs, deterministic=True)
+            action, *_ = model.predict(obs, deterministic=True)
             obs, reward, terminated, truncated, info = env.step(action.item())
             print(obs)
             print(terminated, truncated, reward)

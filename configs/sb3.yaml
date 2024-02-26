@@ -1,0 +1,7 @@
+parent_config: base
+n_envs: 16
+sb3:
+  policy: MlpPolicy
+  config:
+    n_steps: 2048
+    target_kl: null

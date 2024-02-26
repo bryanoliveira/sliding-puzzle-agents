@@ -1,5 +1,7 @@
 runs/
-old_runs/
+*_runs_*/
+logdir/
+
 imgs/
 
 # Byte-compiled / optimized / DLL files

@@ -1,0 +1,12 @@
+parent_config: base
+ray:
+  algorithm: PPO
+  analysis_metric: episode_reward_mean
+  config:
+    num_workers: 8
+    num_envs_per_worker: 4
+    num_gpus: 1
+    log_level: INFO
+    evaluation_interval: 1000
+    evaluation_num_episodes: 10
+    env: "SlidingPuzzle"

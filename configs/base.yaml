@@ -1,0 +1,17 @@
+logdir: runs
+seed: 42
+total_timesteps: 1000000
+num_envs: 32
+wandb_project: sliding_puzzles
+disable_wandb: False
+
+env:
+  w: 2
+  h: 2
+  shuffle_steps: 100
+  sparse_rewards: False
+  sparse_mode: win
+  win_reward: 10
+  variation: raw
+  image_folder: imgs/single
+  image_background: [0, 0, 0]
