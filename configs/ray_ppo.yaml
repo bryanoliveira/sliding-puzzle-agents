@@ -9,4 +9,13 @@ env:
 ray:
   algorithm: PPO
   config:
-    num_workers: 0
+    gamma: 0.99
+    lambda: 0.95
+    lr: 0.0005
+    kl_coeff: 0.5
+    entropy_coeff: 0.01
+    clip_param: 0.2
+    vf_clip_param: 10.0
+    grad_clip: 40.0
+    sgd_minibatch_size: 128
+    train_batch_size: 24000

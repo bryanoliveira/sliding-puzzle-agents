@@ -111,9 +111,8 @@ def parse_configs(framework):
             and configs["ray"]["algorithm"]
         ):
             configs["experiment_name"] += f"_{configs['ray']['algorithm']}"
-        configs["experiment_name"] += f"_{configs['seed']}"
 
-    configs["run_id"] = f"{configs['run_id']}-{configs['experiment_name']}"
+    configs["run_id"] = f"{configs['run_id']}-{configs['experiment_name']}-{configs['seed']}"
 
     if (
         "env" in configs
