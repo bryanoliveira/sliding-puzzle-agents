@@ -1,0 +1,2 @@
+parent_config: ray_ppo
+total_timesteps: 10000000

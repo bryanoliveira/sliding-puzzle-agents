@@ -1,4 +1,12 @@
 parent_config: ray_ppo
 env:
   variation: image
-  image_size: [84, 84]
+  image_size: [160, 210]  # atari-like shape
+ray:
+  config:
+    preprocessor_pref: deepmind
+    observation_filter: MeanStdFilter
+    dim: 84
+    grayscale: true
+    model:
+      vf_share_layers: true

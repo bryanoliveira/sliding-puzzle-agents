@@ -7,6 +7,8 @@ ray:
     num_envs_per_worker: 4
     num_gpus: 1
     log_level: INFO
-    evaluation_interval: 1000
-    evaluation_num_episodes: 10
+    evaluation_config:
+      evaluation_interval: 1000
+      evaluation_duration: 10
+      evaluation_duration_unit: "episodes"
     env: "SlidingPuzzle"

@@ -32,6 +32,7 @@ if __name__ == "__main__":
     configs["ray"]["config"]["env"] = "SlidingPuzzle"
     configs["ray"]["config"]["env_config"] = configs["env"]
     configs["ray"]["config"]["callbacks"] = CustomCallback
+    configs["ray"]["config"]["seed"] = configs["seed"]
 
     # training
     analysis = tune.run(
@@ -43,8 +44,10 @@ if __name__ == "__main__":
             # "time_total_s": 14400, # 4h
             configs["ray"]["analysis_metric"]: configs["env"]["win_reward"],
         },
-        checkpoint_freq=100,
-        checkpoint_at_end=True,
+        checkpoint_config={
+            "checkpoint_frequency": 100,
+            "checkpoint_at_end": True
+        },
         local_dir=os.path.abspath(configs["logdir"]),
         restore=(
             os.path.abspath(configs["checkpoint"])
