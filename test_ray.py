@@ -55,7 +55,6 @@ if __name__ == "__main__":
     print("Loading checkpoint:", checkpoint)
     agent = Policy.from_checkpoint(checkpoint)
     policy = agent[list(agent.keys())[0]]
-    # agent.restore(checkpoint)
 
     while True:
         while not (terminated or truncated):
