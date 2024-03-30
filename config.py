@@ -102,7 +102,10 @@ def parse_configs(framework):
             configs[
                 "experiment_name"
             ] += f"_{configs['env']['image_folder'].split('/')[-1]}"
-        configs["experiment_name"] += f"_{configs['env']['w']}x{configs['env']['h']}"
+
+        puzzle_dim = configs['env']['w'] or configs['env']['h']
+        configs["experiment_name"] += f"_w{puzzle_dim}"
+
         if configs["env"]["sparse_rewards"]:
             configs["experiment_name"] += f"_sparse_{configs['env']['sparse_mode']}"
         if (
@@ -113,13 +116,6 @@ def parse_configs(framework):
             configs["experiment_name"] += f"_{configs['ray']['algorithm']}"
 
     configs["run_id"] = f"{configs['run_id']}-{configs['experiment_name']}-{configs['seed']}"
-
-    if (
-        "env" in configs
-        and "image_folder" in configs["env"]
-        and configs["env"]["image_folder"]
-    ):
-        configs["env"]["image_folder"] = os.path.abspath(configs["env"]["image_folder"])
 
     # dump the configs
     os.makedirs(f"{configs['logdir']}/{configs['run_id']}", exist_ok=True)

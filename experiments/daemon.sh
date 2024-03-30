@@ -16,10 +16,11 @@ while true; do
     # Check if there is at least 50% of RAM available
     ram_usage=$(free | awk '/Mem/{printf("%.2f"), $3/$2*100}' | sed 's/,/\./')
     # Check if there is at least 50% of VRAM available
+    total_vram=$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits | head -n 1)
     vram_usage=$(nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits | head -n 1)
 
     while true; do
-      if (( $(echo "$ram_usage < 50" | bc -l) )) && (( $(echo "$vram_usage < 12000" | bc -l) )); then
+      if (( $(echo "$ram_usage < 50" | bc -l) )) && (( $(echo "($vram_usage / $total_vram) <= 0.5" | bc -l) )); then
         # If there is enough RAM available, break the loop and continue with the execution
         echo "---- Running $script"
         break
