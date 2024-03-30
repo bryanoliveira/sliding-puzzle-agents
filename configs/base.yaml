@@ -2,7 +2,7 @@ logdir: runs
 seed: 42
 total_timesteps: 1000000
 num_envs: 32
-wandb_project: sliding_puzzles
+wandb_project: bryanoliveira/sliding_puzzles
 disable_wandb: False
 
 env:
