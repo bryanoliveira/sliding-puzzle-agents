@@ -1,6 +1,5 @@
 import os
 
-import gymnasium as gym
 from ray import tune
 from ray.air.integrations.wandb import WandbLoggerCallback
 from ray.rllib.algorithms.callbacks import DefaultCallbacks
@@ -9,7 +8,7 @@ from config import parse_configs, seed_everything
 
 import tensorflow as tf
 
-tf.keras.backend.set_floatx("float32")
+tf.compat.v1.enable_eager_execution()
 
 
 class CustomCallback(DefaultCallbacks):
@@ -25,11 +24,10 @@ if __name__ == "__main__":
 
     def create_env(config):
         import sliding_puzzles
+        return sliding_puzzles.make(**config)
 
-        return gym.make("SlidingPuzzle-v0", **config)
-
-    tune.registry.register_env("SlidingPuzzle", create_env)
-    configs["ray"]["config"]["env"] = "SlidingPuzzle"
+    tune.registry.register_env("sldp", create_env)
+    configs["ray"]["config"]["env"] = "sldp"
     configs["ray"]["config"]["env_config"] = configs["env"]
     configs["ray"]["config"]["callbacks"] = CustomCallback
     configs["ray"]["config"]["seed"] = configs["seed"]
@@ -40,9 +38,7 @@ if __name__ == "__main__":
         name=configs["run_id"],
         config=configs["ray"]["config"],
         stop={
-            "timesteps_total": configs["total_timesteps"],  # 15M
-            # "time_total_s": 14400, # 4h
-            configs["ray"]["analysis_metric"]: configs["env"]["win_reward"],
+            "timesteps_total": configs["total_timesteps"],
         },
         checkpoint_config={
             "checkpoint_frequency": 100,

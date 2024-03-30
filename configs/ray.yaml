@@ -11,4 +11,4 @@ ray:
       evaluation_interval: 1000
       evaluation_duration: 10
       evaluation_duration_unit: "episodes"
-    env: "SlidingPuzzle"
+      render_env: True

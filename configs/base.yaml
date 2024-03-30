@@ -7,11 +7,13 @@ disable_wandb: False
 
 env:
   w: 2
-  h: 2
-  shuffle_steps: 100
   sparse_rewards: False
-  sparse_mode: win
   win_reward: 10
-  variation: raw
-  image_folder: imgs/single
+  move_reward: -0.1
+  invalid_move_reward: -1
+  variation: onehot
+  render_mode: rgb_array
+
+  image_folder: single
   image_background: [0, 0, 0]
+  image_size: [84, 84]

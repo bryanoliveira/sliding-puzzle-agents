@@ -2,7 +2,7 @@ runs/
 *_runs_*/
 logdir/
 
-imgs/
+.vscode/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

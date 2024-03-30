@@ -56,7 +56,7 @@ def parse_configs(framework):
     )
     # ray
     parser.add_argument("--ray--algorithm", type=str)
-    parser.add_argument("--ray--n-workers", type=int)
+    parser.add_argument("--ray--config--num-workers", type=int)
     cl_configs = vars(parser.parse_args())
 
     # open base configs from cli

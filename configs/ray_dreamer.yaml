@@ -1,11 +1,30 @@
 parent_config: base
+total_timesteps: 100000
+# env:
+#   variation: image
 ray:
   algorithm: DreamerV3
   analysis_metric: episode_reward_mean
   config:
-    use_float16: False
+    num_envs_per_worker: 4
+    num_gpus: 1
+    log_level: INFO
+    evaluation_config:
+      enable_async_evaluation: True
+      evaluation_interval: 100
+      evaluation_duration: 10
+      evaluation_duration_unit: "episodes"
+      render_env: True
+
+    use_float16: True
     symlog_obs: True
 
-    num_learner_workers: 2
+    num_learner_workers: 4
     num_cpus_per_learner_worker: 1
     num_gpus_per_learner_worker: 0
+
+    # dreamer stuff
+    model_size: "S"
+    training_ratio: 1024
+    batch_size_B: 16
+    batch_length_T: 64
