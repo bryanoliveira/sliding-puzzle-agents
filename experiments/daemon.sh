@@ -2,6 +2,14 @@
 
 mkdir -p experiments/1.to_run experiments/2.queued experiments/3.running experiments/4.executed
 
+if [[ -z $MAX_RAM ]]; then
+    MAX_RAM="0.5"
+fi
+if [[ -z $MAX_VRAM ]]; then
+    MAX_VRAM="0.5"
+fi
+
+echo "Max RAM is $MAX_RAM and max VRAM is $MAX_VRAM"
 
 while true; do
   # Check if there are any scripts in the "experiments/to_run" folder
@@ -14,13 +22,13 @@ while true; do
     echo "---- Queued $script"
 
     # Check if there is at least 50% of RAM available
-    ram_usage=$(free | awk '/Mem/{printf("%.2f"), $3/$2*100}' | sed 's/,/\./')
+    ram_usage=$(free | awk '/Mem/{printf("%.2f"), $3/$2}' | sed 's/,/\./')
     # Check if there is at least 50% of VRAM available
     total_vram=$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits | head -n 1)
     vram_usage=$(nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits | head -n 1)
 
     while true; do
-      if (( $(echo "$ram_usage < 50" | bc -l) )) && (( $(echo "($vram_usage / $total_vram) <= 0.5" | bc -l) )); then
+      if (( $(echo "$ram_usage < $MAX_RAM" | bc -l) )) && (( $(echo "($vram_usage / $total_vram) <= $MAX_VRAM" | bc -l) )); then
         # If there is enough RAM available, break the loop and continue with the execution
         echo "---- Running $script"
         break
@@ -30,7 +38,7 @@ while true; do
         date
         sleep 180
 
-        ram_usage=$(free | awk '/Mem/{printf("%.2f"), $3/$2*100}' | sed 's/,/\./')
+        ram_usage=$(free | awk '/Mem/{printf("%.2f"), $3/$2}' | sed 's/,/\./')
         vram_usage=$(nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits | head -n 1)
       fi
     done
